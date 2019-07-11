@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Network Speed Monitor</string>
+    <string name="download">Download:</string>
+    <string name="upload">Upload:</string>
+    <string name="default_speed">0 K/s</string>
+    <string name="Bps">Bytes per second</string>
+    <string name="bps">Bits per second</string>
+    <string name="testing">Testing your download speed</string>
+    <string name="refresh">refresh</string>
+    <string name="your_download_speed_is">Your download speed is</string>
+</resources>
