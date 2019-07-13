@@ -8,7 +8,6 @@ import android.graphics.drawable.Icon
 import android.net.TrafficStats
 import android.os.Build
 import android.os.IBinder
-import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -28,7 +27,6 @@ class InternetSpeedMeter : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         Thread {
-            val remoteView = RemoteViews(packageName, R.layout.notification)
             var notification: Notification.Builder
             var oldReceived: Long = TrafficStats.getTotalRxBytes()
             var oldTransmitted: Long = TrafficStats.getTotalTxBytes()
@@ -44,33 +42,35 @@ class InternetSpeedMeter : Service() {
                 val receivedBytes = TrafficStats.getTotalRxBytes()
                 dSpeedForNotification = getSpeedForNotification(receivedBytes, oldReceived)
                 uSpeedForNotification = getSpeedForNotification(transmittedBytes, oldTransmitted)
-                remoteView.setTextViewText(R.id.uspeed, uSpeedForNotification)
-                remoteView.setTextViewText(R.id.dspeed, dSpeedForNotification)
-
+                val str = "Download: $dSpeedForNotification   Upload: $uSpeedForNotification"
                 val icon = Icon.createWithBitmap(getSpeedForIcon(dSpeedForNotification))
                 notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     channel = createNotificationChannel("111", "Speed Monitor Service")
                     Notification.Builder(this, channel)
                         .setSmallIcon(icon)
-                        .setCustomContentView(remoteView)
+                        .setContentText(str)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setShowWhen(false)
                         .setContentIntent(pendingIntent)
                 } else {
                     Notification.Builder(this)
                         .setSmallIcon(icon)
-                        .setContent(remoteView)
+                        .setContentText(str)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setShowWhen(false)
                         .setContentIntent(pendingIntent)
                 }
                 startForeground(111, notification.build())
                 oldReceived = receivedBytes
                 oldTransmitted = transmittedBytes
-            }, 0, 3, TimeUnit.SECONDS)
+            }, 0, 1, TimeUnit.SECONDS)
 
         }.start()
         return START_STICKY
     }
 
     private fun getSpeedForNotification(new: Long, old: Long): String {
-        var speed = (new - old) / 3f
+        var speed = (new - old) / 1f
         speed /= 1024
         return if (unit == getString(R.string.bps)) {
             speed *= 8
@@ -111,13 +111,13 @@ class InternetSpeedMeter : Service() {
 
         val paint = Paint()
         paint.isAntiAlias = true
-        paint.textSize = 55f
+        paint.textSize = 65f
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.WHITE
-        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        paint.typeface = Typeface.createFromAsset(assets, "fonts/Oswald-Bold.ttf")
         val unitsPaint = Paint()
         unitsPaint.isAntiAlias = true
-        unitsPaint.textSize = 40f
+        unitsPaint.textSize = 35f
         unitsPaint.textAlign = Paint.Align.CENTER
         unitsPaint.color = Color.WHITE
         unitsPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
@@ -125,14 +125,10 @@ class InternetSpeedMeter : Service() {
         paint.getTextBounds(speed, 0, speed.length, textBounds)
         val unitsTextBounds = Rect()
         unitsPaint.getTextBounds(units, 0, units.length, unitsTextBounds)
-        val width = if (textBounds.width() > unitsTextBounds.width()) textBounds.width() else unitsTextBounds.width()
-        val bitmap = Bitmap.createBitmap(
-            width + 10, 90,
-            Bitmap.Config.ARGB_8888
-        )
+        val bitmap = Bitmap.createBitmap(100, 90, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        canvas.drawText(speed, width / 2 + 5f, 50f, paint)
-        canvas.drawText(units, width / 2f, 90f, unitsPaint)
+        canvas.drawText(speed, 50f, 58f, paint)
+        canvas.drawText(units, 45f, 90f, unitsPaint)
         return bitmap
     }
 
