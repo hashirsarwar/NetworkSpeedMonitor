@@ -49,7 +49,6 @@ class InternetSpeedMeter : Service() {
                     Notification.Builder(this, channel)
                         .setSmallIcon(icon)
                         .setContentText(str)
-                        .setContentTitle(getString(R.string.app_name))
                         .setShowWhen(false)
                         .setContentIntent(pendingIntent)
                 } else {
@@ -108,16 +107,15 @@ class InternetSpeedMeter : Service() {
     }
 
     private fun createBitmapFromString(speed: String, units: String): Bitmap {
-
         val paint = Paint()
         paint.isAntiAlias = true
-        paint.textSize = 65f
+        paint.textSize = 200f
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.WHITE
         paint.typeface = Typeface.createFromAsset(assets, "fonts/Oswald-Bold.ttf")
         val unitsPaint = Paint()
         unitsPaint.isAntiAlias = true
-        unitsPaint.textSize = 35f
+        unitsPaint.textSize = 130f
         unitsPaint.textAlign = Paint.Align.CENTER
         unitsPaint.color = Color.WHITE
         unitsPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
@@ -125,10 +123,10 @@ class InternetSpeedMeter : Service() {
         paint.getTextBounds(speed, 0, speed.length, textBounds)
         val unitsTextBounds = Rect()
         unitsPaint.getTextBounds(units, 0, units.length, unitsTextBounds)
-        val bitmap = Bitmap.createBitmap(100, 90, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        canvas.drawText(speed, 50f, 58f, paint)
-        canvas.drawText(units, 45f, 90f, unitsPaint)
+        canvas.drawText(speed, 150f, 170f, paint)
+        canvas.drawText(units, 150f, 300f, unitsPaint)
         return bitmap
     }
 
