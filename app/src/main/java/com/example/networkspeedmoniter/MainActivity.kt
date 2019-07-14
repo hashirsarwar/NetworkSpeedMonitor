@@ -9,6 +9,8 @@ import android.os.AsyncTask
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.row_item.view.*
 import kotlinx.android.synthetic.main.row_item.view.description
@@ -37,7 +39,9 @@ class MainActivity : AppCompatActivity() {
         val s2 = sharedPreferences.getString("2", getString(R.string.bps))
         headings = arrayOf("Enable download speed meter", "Speed meter unit", "Download speed test unit")
         description = arrayOf("Show download speed in status bar", s1!!, s2!!)
-
+        MobileAds.initialize(this, "ca-app-pub-2945120579589145~9972094370")
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
         adapter = MyAdapter(this, headings, description)
         list.adapter = adapter
         registerForContextMenu(list)

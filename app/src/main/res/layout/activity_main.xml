@@ -59,6 +59,7 @@
             />
     </RelativeLayout>
     <FrameLayout
+        android:layout_above="@+id/adView"
         android:layout_below="@+id/upper_portion"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -69,5 +70,13 @@
             android:layout_height="match_parent" />
 
     </FrameLayout>
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-2945120579589145/9317488257"/>
 
 </RelativeLayout>
