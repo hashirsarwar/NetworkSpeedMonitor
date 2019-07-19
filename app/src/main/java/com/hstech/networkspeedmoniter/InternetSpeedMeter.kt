@@ -1,4 +1,4 @@
-package com.example.networkspeedmoniter
+package com.hstech.networkspeedmoniter
 
 import android.app.*
 import android.content.Context
